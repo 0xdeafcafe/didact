@@ -4,8 +4,11 @@ namespace Didact
 {
 	public class DidactClient
 	{
-		public Metadata Metadata { get; }
+		public Metadata Metadata { get; set; }
 
-		public DidactClient() { }
+		public DidactClient()
+		{
+			Metadata = new Metadata();
+		}
 	}
 }
