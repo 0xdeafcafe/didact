@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Didact.Models.Enums;
 
@@ -8,12 +9,24 @@ namespace Didact
 {
 	public static partial class DidactClientExtensions
 	{
-		public async static Task<DidactClient> ParseAsync(this DidactClient didact, string[] args)
+		public static void Parse(this DidactClient didact, string[] args)
+		{
+			try
+			{
+				didact.ParseAsync(args).Wait();
+			}
+			catch (AggregateException ex)
+			{
+				ExceptionDispatchInfo.Capture(ex.Flatten().InnerExceptions.First()).Throw();
+			}
+		}
+
+		public async static Task ParseAsync(this DidactClient didact, string[] args)
 		{
 			if (args == null || !args.Any())
 			{
 				PrintHelp(didact);
-				return didact;
+				return;
 			}
 
 			// Match all global options
@@ -62,13 +75,16 @@ namespace Didact
 					.Select(a => new KeyValuePair<string, string>(a.ShortCommand.Remove(0, 1), a.Value))
 					.ToDictionary(d => d.Key, d => d.Value);
 
-				await command.Action(arguments, options);
+				if (command.Action != null)
+					command.Action(arguments, options);
+				else if (command.ActionAsync != null)
+					await command.ActionAsync(arguments, options);
+				else
+					throw new InvalidOperationException("There is no action to call. Help.");
 			}
 
 			if (command == null)
 				PrintHelp(didact);
-
-			return didact;
 		}
 
 		private static void ParseOptions(ref DidactClient client, string[] args, string parentName)

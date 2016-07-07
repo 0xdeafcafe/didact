@@ -8,13 +8,33 @@ namespace Didact
 {
 	public static partial class DidactClientExtensions
 	{
-		public static DidactClient Command(this DidactClient didact, string commandStr, string description,
+		public static DidactClient CommandAsync(this DidactClient didact, string commandStr, string description,
 			Func<Dictionary<string, string>, Dictionary<string, string>, Task> action)
+		{
+			if (action == null)
+				throw new ArgumentNullException($"The {nameof(action)} argument cannot be null", nameof(action));
+
+			return didact.Command(commandStr, description, actionAsync: action);
+		}
+
+		public static DidactClient Command(this DidactClient didact, string commandStr, string description,
+			Action<Dictionary<string, string>, Dictionary<string, string>> action)
+		{
+			if (action == null)
+				throw new ArgumentNullException($"The {nameof(action)} argument cannot be null", nameof(action));
+
+			return didact.Command(commandStr, description, action: action);
+		}
+
+		private static DidactClient Command(this DidactClient didact, string commandStr, string description,
+			Action<Dictionary<string, string>, Dictionary<string, string>> action = null,
+			Func<Dictionary<string, string>, Dictionary<string, string>, Task> actionAsync = null)
 		{
 			var command = new Command
 			{
 				CommandStr = commandStr,
-				Action = action
+				Action = action,
+				ActionAsync = actionAsync
 			};
 
 			var match = Regex.Match(commandStr, @"([a-z]+[a-z0-9\-]+)[ ]?([\<\>\[\]a-z0-9 ]+)?", RegexOptions.IgnoreCase);
