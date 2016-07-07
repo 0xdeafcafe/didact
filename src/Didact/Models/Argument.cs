@@ -7,5 +7,7 @@ namespace Didact.Models
 		public bool IsArray { get; set; }
 
 		public bool IsRequired { get; set; }
+
+		public string Value { get; set; }
 	}
 }

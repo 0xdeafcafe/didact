@@ -22,6 +22,8 @@ namespace Didact.Models
 		public OptionType OptionType { get; set; }
 
 		public string ParentName { get; set; }
+
+		public string Value { get; set; }
 	}
 
 	public class Option<T> : Option
