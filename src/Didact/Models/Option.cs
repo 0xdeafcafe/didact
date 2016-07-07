@@ -3,9 +3,7 @@ using Didact.Models.Enums;
 
 namespace Didact.Models
 {
-	public abstract class Option { }
-
-	public class Option<T> : Option where T : struct
+	public abstract class Option
 	{
 		public string Flags { get; set; }
 
@@ -19,13 +17,16 @@ namespace Didact.Models
 
 		public Type Type { get; set; }
 
-		public T DefaultValue { get; set; }
-
 		public bool Required { get; set; }
 
 		public OptionType OptionType { get; set; }
 
 		public string ParentName { get; set; }
+	}
+
+	public class Option<T> : Option
+	{
+		public T DefaultValue { get; set; }
 
 		public Func<string, T> Parse { get; set; }
 	}

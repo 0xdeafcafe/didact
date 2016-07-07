@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Didact.Models;
 using Didact.Models.Enums;
+using static System.Console;
 
 namespace Didact
 {
@@ -26,44 +27,46 @@ namespace Didact
 			return didact;
 		}
 
-		public static DidactClient Option<T>(this DidactClient didact, string flags,
-			string description, Func<string, T> parse = null, T defaultValue = default(T))
-			where T : struct
+		public static DidactClient Option(this DidactClient didact, string flags,
+			string description, Func<string, string> parse = null, string defaultValue = default(string))
 		{
-			var option = new Option<T>
+			var parentName = didact.Commands.LastOrDefault()?.Name;
+			var option = new Option<string>
 			{
 				DefaultValue = defaultValue,
 				Description = description,
 				Flags = flags,
-				OptionType = OptionType.Global,
+				OptionType = parentName == null ? OptionType.Global : OptionType.Command,
+				ParentName = parentName,
 				Parse = parse,
-				Type = typeof(T)
+				Type = typeof(string)
 			};
 
 			// Check format of flags
-			var regex = new Regex(@"(\-[a-z]),[ ]([\-]{2}[a-z]+)[ ]?([\<\>\[\]a-z0-9\. ]+)?", RegexOptions.IgnoreCase);
-			var matches = regex.Matches(flags);
-			if (matches.Count != 2 && matches.Count != 3)
+			var match = Regex.Match(flags, @"(\-[a-z]),[ ]([\-]{2}[a-z\-]+)[ ]?([\<\>\[\]a-z0-9\- ]+)?", RegexOptions.IgnoreCase);
+			if (!match.Success || match.Groups.Count != 4)
 				throw new ArgumentException($"The Flags format is malformed for '{flags}'.", nameof(flags));
 
-			option.ShortCommand = matches[0].Value;
-			option.LongCommand = matches[1].Value;
+			option.ShortCommand = match.Groups[1].Value;
+			option.LongCommand = match.Groups[2].Value;
 
 			// Parse arguments out from flags
-			var arguments = matches[2].Value.Trim().Split(' ');
+			var arguments = match.Groups[3].Value.Trim().Split(' ');
 			if (arguments.Count() > 1)
 				throw new ArgumentException($"The Flags format is malformed for the argument. You can have only one argument on an option.", nameof(flags));
 
 			if (arguments.Any())
 			{
 				var argument = arguments.First();
-				var argRegex = new Regex(@"(\<[a-z]+[a-z0-9]+\>|\[[a-z]+[a-z0-9]+\])", RegexOptions.IgnoreCase);
-				if (!argRegex.IsMatch(argument))
+				var argRegex = Regex.Match(argument, @"(\<[a-z]+[a-z0-9\-]+\>|\[[a-z]+[a-z0-9]+\])", RegexOptions.IgnoreCase);
+				if (!argRegex.Success)
 					throw new ArgumentException($"The Flags format is malformed for the argument '{argument}'.", nameof(flags));
 
 				option.Required = argument.StartsWith("<");
 				option.ArgumentName = argument.Trim('<', '>', '[', ']');
 			}
+
+			didact.Options.Add(option);
 
 			return didact;
 		}
