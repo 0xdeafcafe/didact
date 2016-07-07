@@ -14,7 +14,7 @@ namespace Didact
 			if (action == null)
 				throw new ArgumentNullException($"The {nameof(action)} argument cannot be null", nameof(action));
 
-			return didact.Command(commandStr, description, actionAsync: action);
+			return didact.Command(commandStr, description, action: null, actionAsync: action);
 		}
 
 		public static DidactClient Command(this DidactClient didact, string commandStr, string description,
@@ -23,7 +23,7 @@ namespace Didact
 			if (action == null)
 				throw new ArgumentNullException($"The {nameof(action)} argument cannot be null", nameof(action));
 
-			return didact.Command(commandStr, description, action: action);
+			return didact.Command(commandStr, description, action: action, actionAsync: null);
 		}
 
 		private static DidactClient Command(this DidactClient didact, string commandStr, string description,

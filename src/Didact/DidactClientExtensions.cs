@@ -35,17 +35,14 @@ namespace Didact
 			WriteLine();
 
 			// Print Global Options
+			WriteLine("Global Options:");
 			var options = client.Options.Where(o => o.OptionType == OptionType.Global);
-			if (options.Any())
+			var largestLinePosition = 4 + options.OrderByDescending(o => o.ShortCommand.Length).First().ShortCommand.Length + options.OrderByDescending(o => o.LongCommand.Length).First().LongCommand.Length;
+			foreach (var option in options)
 			{
-				WriteLine("Global Options:");
-				var largestLinePosition = 4 + options.OrderByDescending(o => o.ShortCommand.Length).First().ShortCommand.Length + options.OrderByDescending(o => o.LongCommand.Length).First().LongCommand.Length;
-				foreach (var option in options)
-				{
-					var line = $"  {option.ShortCommand}, {option.LongCommand}";
-					var padding = largestLinePosition - line.Length;
-					WriteLine($"{line.PadRight(padding, ' ')} {option.Description}");
-				}
+				var line = $"  {option.ShortCommand}, {option.LongCommand}";
+				var padding = largestLinePosition - line.Length;
+				WriteLine($"{line.PadRight(padding, ' ')} {option.Description}");
 			}
 
 			// TODO: print commands with their respective options
