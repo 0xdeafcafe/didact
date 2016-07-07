@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using BaelorNet;
 using Didact;
@@ -11,22 +14,33 @@ namespace ConsoleApplication
 		public static void Main(string[] args)
 		{
 			var didact = new DidactClient()
+				.CliName("baelor")
 				.Name("Baelor Cli Client")
 				.Version("1.0.0")
-				.Usage("get-song <song> [options]")
 				.Option("-k, --api-key [api-key]", "The Api Key for your account on baelor.io.")
 				.Command("get-album <album>", "Get's details of a Taylor Swift album.", GetAlbum)
 				.Command("get-lyrics <song>", "Gets the lyric of a Taylor Swift song.", GetLyricsToSong)
-					.Option("-s, --show-timecodes [show-timecodes]", "Toggles the visibility of Timecodes", defaultValue: "t");
+					.Option("-s, --show-timecodes [show-timecodes]", "Toggles the visibility of Timecodes", validate: (val) => 
+					{
+						var lowerVal = val.ToLowerInvariant();
+						return (lowerVal == "t" || lowerVal == "f");
+					}, defaultValue: "t");
 
-			didact.ParseAsync(args).Wait();
+			try
+			{
+				didact.ParseAsync(args).Wait();
+			}
+			catch (AggregateException ex)
+			{
+				ExceptionDispatchInfo.Capture(ex.Flatten().InnerExceptions.First()).Throw();
+			}
 		}
 
 		public static async Task GetLyricsToSong(Dictionary<string, string> arguments, Dictionary<string, string> options)
 		{
 			var songSlug = arguments["song"];
 			var showTimecodes = options["show-timecodes"];
-			var apiKey = options["api-key"];
+			var apiKey = options["k"];
 
 			var client = new BaelorClient(apiKey);
 			var song = await client.Song(songSlug);
@@ -41,7 +55,7 @@ namespace ConsoleApplication
 		public static async Task GetAlbum(Dictionary<string, string> arguments, Dictionary<string, string> options)
 		{
 			var albumSlug = arguments["album"];
-			var apiKey = options["api-key"];
+			var apiKey = options["k"];
 
 			var client = new BaelorClient(apiKey);
 			var album = await client.Album(albumSlug);
