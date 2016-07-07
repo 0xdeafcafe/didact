@@ -152,23 +152,3 @@ namespace Didact
 		}
 	}
 }
-
-
-// TODO: move this to command parsing
-// var index = 0;
-// foreach(var argument in arguments)
-// {
-// 	var argRegex = new Regex(@"(\<[a-z]+[a-z0-9\.]+\>|\[[a-z]+[a-z0-9\.]+\])", RegexOptions.IgnoreCase);
-// 	if (!argRegex.IsMatch(argument))
-// 		throw new ArgumentException($"The Flags format is malformed for the argument '{argument}'.", nameof(flags));
-
-// 	if (argument.Contains("."))
-// 	{
-// 		if (!argument.EndsWith("..."))
-// 			throw new ArgumentException($"The Flags format is malformed for the argument '{argument}'. Arguments can only contain peroids if they are at the end of the argument name, and are in a group of three.", nameof(flags));
-// 		if (index != argument.Count() - 1)
-// 			throw new ArgumentException($"The Flags format is malformed for the argument '{argument}'. Array arguments can only ", nameof(flags));
-// 	}
-
-//     index++;
-// }
