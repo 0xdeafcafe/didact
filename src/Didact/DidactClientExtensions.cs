@@ -119,7 +119,36 @@ namespace Didact
 
 		public static DidactClient Parse(this DidactClient didact, string[] args)
 		{
+			if (args == null || !args.Any())
+			{
+				PrintHelp(didact);
+				return didact;
+			}
+			PrintHelp(didact);
+
 			return didact;
+		}
+
+		private static void PrintHelp(DidactClient client)
+		{
+			WriteLine();
+			WriteLine(client.Metadata.Name);
+			WriteLine();
+			WriteLine($"  Version: {client.Metadata.Version}");
+			WriteLine();
+			WriteLine($"Usage: {client.Metadata.Usage}");
+			WriteLine();
+			WriteLine("Common Options:");
+
+			// Print Global Options
+			var options = client.Options.Where(o => o.OptionType == OptionType.Global);
+			var largestLinePosition = 4 + options.OrderByDescending(o => o.ShortCommand.Length).First().ShortCommand.Length + options.OrderByDescending(o => o.LongCommand.Length).First().LongCommand.Length;
+			foreach (var option in options)
+			{
+				var line = $"  {option.ShortCommand}, {option.LongCommand}";
+				var padding = largestLinePosition - line.Length;
+				WriteLine($"{line.PadRight(padding, ' ')} {option.Description}");
+			}
 		}
 	}
 }
