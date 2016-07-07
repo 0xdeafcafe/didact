@@ -3,13 +3,13 @@ using Didact.Models.Enums;
 
 namespace Didact.Models
 {
-	public abstract class Option
+	public class Option
 	{
 		public string Flags { get; set; }
 
 		public string Description { get; set; }
 
-		public string ArgumentName { get; set; }
+		public string Name { get; set; }
 
 		public string ShortCommand { get; set; }
 
@@ -17,19 +17,18 @@ namespace Didact.Models
 
 		public Type Type { get; set; }
 
-		public bool Required { get; set; }
+		public bool IsRequired { get; set; }
 
 		public OptionType OptionType { get; set; }
 
 		public string ParentName { get; set; }
 
 		public string Value { get; set; }
-	}
 
-	public class Option<T> : Option
-	{
-		public T DefaultValue { get; set; }
+		public string DefaultValue { get; set; }
 
-		public Func<string, T> Parse { get; set; }
+		public Func<string, string> Parse { get; set; }
+
+		public Func<string, bool> Validate { get; set; }
 	}
 }
