@@ -16,6 +16,12 @@ namespace Didact
 			didact.Metadata.Name = name;
 			return didact;
 		}
+		
+		public static DidactClient CliName(this DidactClient didact, string cliName)
+		{
+			didact.Metadata.CliName = cliName;
+			return didact;
+		}
 
 		public static DidactClient Version(this DidactClient didact, string version)
 		{
