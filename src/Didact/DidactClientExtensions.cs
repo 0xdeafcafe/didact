@@ -58,7 +58,7 @@ namespace Didact
 			if (arguments.Any())
 			{
 				var argument = arguments.First();
-				var argRegex = Regex.Match(argument, @"(\<[a-z]+[a-z0-9\-]+\>|\[[a-z]+[a-z0-9]+\])", RegexOptions.IgnoreCase);
+				var argRegex = Regex.Match(argument, @"(\<[a-z]+[a-z0-9\-]+\>|\[[a-z]+[a-z0-9\-]+\])", RegexOptions.IgnoreCase);
 				if (!argRegex.Success)
 					throw new ArgumentException($"The Flags format is malformed for the argument '{argument}'.", nameof(flags));
 
@@ -95,7 +95,7 @@ namespace Didact
 					IsRequired = argumentStr.StartsWith("<")
 				};
 				
-				var argRegex = Regex.Match(argumentStr, @"(\<[a-z]+[a-z0-9\.]+\>|\[[a-z]+[a-z0-9\.]+\])", RegexOptions.IgnoreCase);
+				var argRegex = Regex.Match(argumentStr, @"(\<[a-z]+[a-z0-9\-\.]+\>|\[[a-z]+[a-z0-9\-\.]+\])", RegexOptions.IgnoreCase);
 				if (!argRegex.Success)
 					throw new ArgumentException($"The Command format is malformed for the argument '{argumentStr}'.", nameof(commandStr));
 
