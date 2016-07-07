@@ -129,6 +129,35 @@ namespace Didact
 			return didact;
 		}
 
+		public static void DebugPrintValues(this DidactClient client)
+		{
+			WriteLine();
+			WriteLine("Printing Internal Values");
+			WriteLine();
+			WriteLine($"  Global Options");
+			foreach (var option in client.Options.Where(o => o.OptionType == OptionType.Global))
+				WriteLine($"    {option.ShortCommand}, {option.LongCommand} - {option.Value}");
+			WriteLine();
+			WriteLine($"  Commands");
+			foreach (var command in client.Commands)
+			{
+				WriteLine($"  {command.Name}'s Details");
+				WriteLine($"    Arguments");
+				foreach (var argument in command.Arguments)
+					WriteLine($"      {argument.Name} - {argument.Value}");
+
+				WriteLine($"    Arguments");
+				foreach (var argument in command.Arguments)
+					WriteLine($"      {argument.Name} - {argument.Value}");
+
+				WriteLine($"    Options");
+				foreach (var option in client.Options.Where(o => o.ParentName == command.Name))
+				WriteLine($"      {option.ShortCommand}, {option.LongCommand} - {option.Value}");
+
+				WriteLine();
+			}
+		}
+
 		private static void PrintHelp(DidactClient client)
 		{
 			WriteLine();
