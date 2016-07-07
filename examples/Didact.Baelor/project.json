@@ -6,7 +6,7 @@
 	},
 	
 	"dependencies": {
-		"Didact": "1.0.0-beta1-*",
+		"Didact": "1.0.0-beta1",
 		"BaelorNet": "2.0.1"
 	},
 

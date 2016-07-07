@@ -7,7 +7,7 @@ using BaelorNet;
 using Didact;
 using static System.Console;
 
-namespace ConsoleApplication
+namespace Didact.Baelor
 {
 	public class Program
 	{
@@ -18,8 +18,8 @@ namespace ConsoleApplication
 				.Name("Baelor Cli Client")
 				.Version("1.0.0")
 				.Option("-k, --api-key [api-key]", "The Api Key for your account on baelor.io.")
-				.Command("get-album <album>", "Get's details of a Taylor Swift album.", GetAlbum)
-				.Command("get-lyrics <song>", "Gets the lyric of a Taylor Swift song.", GetLyricsToSong)
+				.CommandAsync("get-album <album>", "Get's details of a Taylor Swift album.", GetAlbum)
+				.CommandAsync("get-lyrics <song>", "Gets the lyric of a Taylor Swift song.", GetLyricsToSong)
 					.Option("-h, --hide-timecodes [hide-timecodes]", "Toggles the visibility of Timecodes", validate: (val) => 
 					{
 						var lowerVal = val.ToLowerInvariant();
