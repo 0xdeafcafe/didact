@@ -7,6 +7,8 @@ namespace Didact
 	{
 		internal Metadata Metadata { get; set; } = new Metadata();
 
+		internal IList<Command> Commands { get; set; } = new List<Command>();
+
 		internal IList<Option> Options { get; set; } = new List<Option>();
 
 		public DidactClient() { }
