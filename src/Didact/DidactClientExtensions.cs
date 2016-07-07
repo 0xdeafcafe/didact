@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Didact.Models;
 using Didact.Models.Enums;
 using static System.Console;
@@ -71,11 +72,13 @@ namespace Didact
 			return didact;
 		}
 
-		public static DidactClient Command(this DidactClient didact, string commandStr, string description)
+		public static DidactClient Command(this DidactClient didact, string commandStr, string description,
+			Func<Dictionary<string, string>, Dictionary<string, string>, Task> action)
 		{
 			var command = new Command
 			{
-				CommandStr = commandStr
+				CommandStr = commandStr,
+				Action = action
 			};
 
 			var match = Regex.Match(commandStr, @"([a-z]+[a-z0-9\-]+)[ ]?([\<\>\[\]a-z0-9\. ]+)?", RegexOptions.IgnoreCase);
