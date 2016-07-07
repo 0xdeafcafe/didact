@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Didact.Models
 {
@@ -9,7 +10,7 @@ namespace Didact.Models
 
 		public string CommandStr { get; set; }
 
-		public Action<int> Action { get; set; }
+		public Func<Dictionary<string, string>, Dictionary<string, string>, Task> Action { get; set; }
 
 		public IList<Argument> Arguments { get; set; } = new List<Argument>();
 	}
