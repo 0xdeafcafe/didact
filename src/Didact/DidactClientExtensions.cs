@@ -8,6 +8,12 @@ namespace Didact
 {
 	public static class DidactClientExtensions
 	{
+		public static DidactClient Name(this DidactClient didact, string name)
+		{
+			didact.Metadata.Name = name;
+			return didact;
+		}
+
 		public static DidactClient Version(this DidactClient didact, string version)
 		{
 			didact.Metadata.Version = version;
