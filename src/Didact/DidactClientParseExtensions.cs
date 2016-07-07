@@ -44,15 +44,23 @@ namespace Didact
 					option.Value = option.DefaultValue;
 
 				// Throw exception if a required command is missing
-				var missingOption = didact.Options.FirstOrDefault(o => o.OptionType == OptionType.Global &&
-																  o.ParentName == command.Name &&
-																  o.IsRequired && o.Value == null);
+				var missingOption = didact.Options
+					.FirstOrDefault(o => o.OptionType == OptionType.Global &&
+									o.ParentName == command.Name &&
+									o.IsRequired && o.Value == null);
+									
 				if (missingOption != null)
 					throw new ArgumentNullException($"The {missingOption.Name} option is required for this command.");
 
 				// Create dictionaries of arguments and options to pass into the action
-				var arguments = command.Arguments.Select(a => new KeyValuePair<string, string>(a.Name, a.Value)).ToDictionary(d => d.Key, d => d.Value);
-				var options = didact.Options.Where(o => o.ParentName == command.Name || o.OptionType == OptionType.Global).Select(a => new KeyValuePair<string, string>(a.ShortCommand.Remove(0, 1), a.Value)).ToDictionary(d => d.Key, d => d.Value);
+				var arguments = command.Arguments
+					.Select(a => new KeyValuePair<string, string>(a.Name, a.Value))
+					.ToDictionary(d => d.Key, d => d.Value);
+
+				var options = didact.Options
+					.Where(o => o.ParentName == command.Name || o.OptionType == OptionType.Global)
+					.Select(a => new KeyValuePair<string, string>(a.ShortCommand.Remove(0, 1), a.Value))
+					.ToDictionary(d => d.Key, d => d.Value);
 
 				await command.Action(arguments, options);
 			}
