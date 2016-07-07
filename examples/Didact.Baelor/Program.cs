@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using BaelorNet;
-using Didact;
 using static System.Console;
 
 namespace Didact.Baelor
