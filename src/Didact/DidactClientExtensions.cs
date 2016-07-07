@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -120,14 +121,50 @@ namespace Didact
 			return didact;
 		}
 
-		public static DidactClient Parse(this DidactClient didact, string[] args)
+		public async static Task<DidactClient> ParseAsync(this DidactClient didact, string[] args)
 		{
 			if (args == null || !args.Any())
 			{
 				PrintHelp(didact);
 				return didact;
 			}
-			PrintHelp(didact);
+
+			// Match all global options
+			for(var i = 0; i < args.Length; i++)
+			{
+				var option = didact.Options.FirstOrDefault(o => args[i] == o.ShortCommand || args[i] == o.LongCommand);
+				if (option != null && args.Length >= i + 1)
+					option.Value = args[i + 1];
+			}
+
+			// Check if first command matches any commands
+			var command = didact.Commands.FirstOrDefault(c => c.Name == args[0]);
+			if (command != null)
+			{
+				// parse the next few into commands arguments
+				for(var i = 1; i < args.Length; i++)
+				{
+					var argument = command.Arguments.ElementAtOrDefault(i - 1);
+					if (argument != null && args.Length >= i)
+						argument.Value = args[i];
+				}
+
+				// parse all command specific options
+				for(var i = 0; i < args.Length; i++)
+				{
+					var option = didact.Options.FirstOrDefault(o => args[i] == o.ShortCommand || args[i] == o.LongCommand && o.ParentName == command.Name);
+					if (option != null && args.Length >= i + 1)
+						option.Value = args[i + 1];
+				}
+
+				var arguments = command.Arguments.Select(a => new KeyValuePair<string, string>(a.Name, a.Value)).ToDictionary(d => d.Key, d => d.Value);
+				var options = didact.Options.Where(o => o.ParentName == command.Name || o.OptionType == OptionType.Global).Select(a => new KeyValuePair<string, string>(a.ArgumentName, a.Value)).ToDictionary(d => d.Key, d => d.Value);
+
+				await command.Action(arguments, options);
+			}
+
+			if (command == null)
+				PrintHelp(didact);
 
 			return didact;
 		}
