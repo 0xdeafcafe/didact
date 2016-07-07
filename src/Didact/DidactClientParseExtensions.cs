@@ -83,8 +83,8 @@ namespace Didact
 					{
 						if (option.Validate(val))
 							option.Value = val;
-						
-						throw new FormatException($"The option {option.ShortCommand} failed data validation.");
+						else
+							throw new FormatException($"The option {option.ShortCommand} failed data validation.");
 					}
 				}
 			}
