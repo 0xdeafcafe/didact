@@ -12,7 +12,7 @@
 		"requireLicenseAcceptance": false,
 		"tags": [ "dotnet", "command-line", "manager" ]
 	},
-	"version": "1.0.0-beta3-*",
+	"version": "1.0.0-beta4-*",
 	"buildOptions": {
 		"debugType": "portable",
 		"emitEntryPoint": false

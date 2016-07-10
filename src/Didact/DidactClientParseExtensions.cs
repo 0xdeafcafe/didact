@@ -92,9 +92,10 @@ namespace Didact
 			for(var i = 1; i < args.Length; i++)
 			{
 				var option = client.Options.FirstOrDefault(o => args[i - 1] == o.ShortCommand || args[i - 1] == o.LongCommand && o.ParentName == parentName);
-				if (option != null && args.Length >= i)
+				if (option != null)
 				{
-					var val = args[i];
+					// Read option argument - null if not present
+					var val = args.Length >= i ? args[i] : null;
 
 					// Parse
 					if (option.Parse != null)
