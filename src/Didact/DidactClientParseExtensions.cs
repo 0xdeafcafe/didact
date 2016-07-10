@@ -110,6 +110,9 @@ namespace Didact
 						else
 							throw new FormatException($"The option {option.ShortCommand} failed data validation.");
 					}
+
+					if (option.IsRequired && option.Value == null)
+						throw new FormatException($"The {option.Name} is required.");
 				}
 			}
 		}
