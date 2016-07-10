@@ -46,6 +46,9 @@ namespace Didact
 			var arguments = match.Groups[2].Value.Trim().Split(' ');
 			foreach(var argumentStr in arguments)
 			{
+				if (string.IsNullOrWhiteSpace(argumentStr))
+					continue;
+
 				var trimmedArgumentStr = argumentStr.Trim('<', '>', '[', ']');
 				var argument = new Argument
 				{
