@@ -44,7 +44,6 @@ namespace Didact
 			command.Name = match.Groups[1].Value;
 
 			var arguments = match.Groups[2].Value.Trim().Split(' ');
-			var index = 0;
 			foreach(var argumentStr in arguments)
 			{
 				var trimmedArgumentStr = argumentStr.Trim('<', '>', '[', ']');
@@ -59,7 +58,6 @@ namespace Didact
 					throw new ArgumentException($"The Command format is malformed for the argument '{argumentStr}'.", nameof(commandStr));
 
 				command.Arguments.Add(argument);
-				index++;
 			}
 
 			didact.Commands.Add(command);
