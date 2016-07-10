@@ -58,9 +58,8 @@ namespace Didact
 
 				// Throw exception if a required command is missing
 				var missingOption = didact.Options
-					.FirstOrDefault(o => o.OptionType == OptionType.Global &&
-									o.ParentName == command.Name &&
-									o.IsRequired && o.Value == null);
+					.FirstOrDefault(o => 
+						(o.OptionType == OptionType.Global || o.ParentName == command.Name) && o.IsRequired && o.Value == null);
 									
 				if (missingOption != null)
 					throw new ArgumentNullException($"The {missingOption.Name} option is required for this command.");
@@ -109,11 +108,8 @@ namespace Didact
 						if (option.Validate(val))
 							option.Value = val;
 						else
-							throw new FormatException($"The option {option.ShortCommand} failed data validation.");
+							throw new FormatException($"The option '{option.ShortCommand}' failed data validation.");
 					}
-
-					if (option.IsRequired && option.Value == null)
-						throw new FormatException($"The {option.Name} is required.");
 				}
 			}
 		}
