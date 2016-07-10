@@ -1,4 +1,17 @@
 {
+	"title": "Didact",
+	"description": "dotnet command-line application manager",
+	"authors": [ "Alex Forbes-Reed" ],
+	"language": "en-gb",
+	"packOptions": {
+		"licenseUrl": "http://www.dbad-license.org/",
+		"repository": {
+			"type": "git",
+			"url": "https://github.com/0xdeafcafe/didact"
+		},
+		"requireLicenseAcceptance": false,
+		"tags": [ "dotnet", "command-line", "manager" ]
+	},
 	"version": "1.0.0-beta1-*",
 	"buildOptions": {
 		"debugType": "portable",
